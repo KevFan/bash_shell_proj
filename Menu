@@ -1,0 +1,108 @@
+#!/bin/bash
+#Kevin Fan (Date)
+#Description: This Menu script present the user with a command line
+#menu and allow the user to select the functionaly based on
+# their selection which in turns executes the relevent script
+
+#Clear the console
+clear
+
+#Function that displays available options to user, reads in user option and calls validation
+#function to check is user input valid
+function mainMenu 
+{
+	printf "\nWelcome. Please choose one of the following:\n"
+	printf "\n\t1. Add a new Customer\n"
+	printf "\n\t2. Remove an existing Customer\n"
+	printf "\n\t3. Search for a Customer\n"
+	printf "\n\t4. E-mail a customer\n"
+	printf "\n\t==================================\n"
+	printf "\n\t0. Exit\n"
+
+	printf  "\nEnter a number: "
+	read userChoice
+	validInput
+}
+
+
+#From user choice, execute relevant script for function
+#Need to do error handling for options
+#Probably use while loop and if statement to stay in menu till a valid
+#option is entered 
+
+function runMenu
+{
+	while [ $userChoice -ne 0 ]
+	do
+		case $userChoice in
+	        	1) ./AddCust ;;
+	        	2) ./RemCust ;;
+	        	3) ./FindCust ;;
+	        	4) #Email function
+		esac
+		printf "\nPress any key to continue..."
+		mainMenu
+	done
+	printf "\nExiting... bye\n"
+	exit 1
+
+	#################################################################
+	# If/Else version of case statement above
+	#################################################################
+
+	# while [ $userChoice -ne 0 ]
+	# do
+
+	# 	if [ $userChoice -le -1 ] || [ $userChoice -ge 5 ]
+	# 	then
+	# 		printf "\nInvalid number entered\n"
+	# 		read
+	# 		clear
+	# 	if [ $userChoice -eq 1 ]
+	# 	then
+	# 		./AddCust
+	# 	elif [ $userChoice -eq 2 ]
+	# 	then
+	# 		./RemCust
+	# 	elif [ $userChoice -eq 3 ]
+	# 	then 
+	# 		./FindCust
+	# 	elif [ $userChoice -eq 4 ]
+	# 	then
+	# 		printf "This is the to be email function"
+	# 		read
+	# 	else
+	# 		printf "\nInvalid entry (String), only options shown are allowed. Please re-renter option\n"
+	# 		read
+	# 	fi
+	# 	mainMenu
+	# done
+
+	# printf "\nExiting... bye\n"
+	# exit 1
+}
+
+
+#This function performs validation on userChoice from mainMenu function.
+#If validation fails, a relevent error is displayed and returns to mainMenu to re-enter user Choice
+#If validation passes, runMenu function is called, which in turn executes the relevant script call
+function validInput 
+{
+	if ! [[ $userChoice =~ ^[0-9]+$ ]]; then
+		printf "\nInvalid entry (String), only options shown are allowed. Please re-renter option\n"
+		read
+		clear
+		mainMenu
+	elif [ $userChoice -le -1 ] || [ $userChoice -ge 5 ]; then
+		printf "\nInvalid number entered\n"
+		read
+		clear
+		mainMenu
+	else
+		runMenu
+	fi
+}
+
+#Run main Menu function, which begins the loop 
+mainMenu
+

@@ -1,0 +1,22 @@
+#!/bin/bash
+#Kevin Fan (Date)
+#Description: This script searches and removes all of a customer's information
+# from the Address Book based on a particular customers name or alias
+
+#Clear the terminal
+clear
+
+#Ask user for search name
+printf "Please enter name or alias of customer you wish to remove:  "
+
+#Reads in search name as parameter
+read input
+
+#Inverted search - All but the searched item is moved to an temp file
+#Todo: Currently removes all customers if have same name with no validation
+#Need to print out how many is found and ask do user want to remove all or redo search and remove 
+grep -v $input CustomerDetails > /tmp/CustomerDetails
+
+#Temp file is moved back to the same directory replacing the old file
+mv /tmp/CustomerDetails CustomerDetails
+

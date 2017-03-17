@@ -1,0 +1,22 @@
+#!/bin/bash
+#Kevin Fan (Date)
+#Description: This script allows the user to search for an existing customer based upon
+# any of the customers personal information
+
+#Clear the console
+clear
+
+#Asks user for search term
+printf "Please enter search term: "
+
+#Takes in serch term as parameter
+read input
+
+#Search term in CustomerDetails 
+grep $input CustomerDetails
+
+#Todo: 
+#- If nothing is found, display relevant message
+#- 
+#Pauses console to display and wait for user interaction
+read

@@ -1,0 +1,26 @@
+#!/bin/bash
+#Kevin Fan (Date)
+#Description: This script creates a local file named "CustomerDetails".
+#Parameters are taken in from the user and stored/updates the CustomerDetails 
+#file with customer details taken from the user
+
+#Clears the screen content
+clear
+
+#Asks user to enter email address. Need to error checking that email if unique
+#and take emails contains @ with a . 
+printf "\tPlease enter the customer email address: "
+read email
+printf "\n\tPlease enter the customer name: "
+read name
+printf "\n\tPlease enter the customer alias: "
+read alias
+printf "\n\tPlease enter the customer address: "
+read address
+printf "\n\tPlease enter the customer telephone Number: "
+read phoneNumber
+
+#Takes the entered parameters and list them in a file called CustomerDetails
+echo "$email		$name		$alias		$address		$phoneNumber" >> CustomerDetails
+echo "Customer successfully added"
+read
