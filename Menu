@@ -89,12 +89,14 @@ function runMenu
 function validInput 
 {
 	if ! [[ $userChoice =~ ^[0-9]+$ ]]; then
-		printf "\nInvalid entry (String), only options shown are allowed. Please re-renter option\n"
+		printf "\nInvalid (String) entry, only integers shown are allowed. Please re-renter option\n"
+		printf "\nPress enter key to return to Main menu ...."
 		read
 		clear
 		mainMenu
 	elif [ $userChoice -le -1 ] || [ $userChoice -ge 5 ]; then
 		printf "\nInvalid number entered\n"
+		printf "\nPress enter key to return to Main menu ...."
 		read
 		clear
 		mainMenu
