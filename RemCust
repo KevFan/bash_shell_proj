@@ -6,17 +6,51 @@
 #Clear the terminal
 clear
 
-#Ask user for search name
-printf "Please enter name or alias of customer you wish to remove:  "
+function readInput 
+{
+	#Ask user for search name
+	printf "\nPlease enter name or alias of customer you wish to remove:  "
 
-#Reads in search name as parameter
-read input
+	#Reads in search name as parameter
+	read input
+	checkInput
+}
 
-#Inverted search - All but the searched item is moved to an temp file
-#Todo: Currently removes all customers if have same name with no validation
-#Need to print out how many is found and ask do user want to remove all or redo search and remove 
-grep -v $input CustomerDetails > /tmp/CustomerDetails
+function checkInput
+{
+	if [ -z $input ]; then
+		printf "\n\tNo entry detected. Please re-enter search term"
+		readInput
+	elif [[ $(grep -i $input ../CustomerDetails | wc -l) -ne 0 ]]; then
+		printf "\nMultiple matches were found:\n"
+		grep -i $input ../CustomerDetails 
+		printf "\n\t1) Remove all matching entries found\n"
+		printf "\n\t2) Perform another search\n"
+		printf "\nEnter choice: "
+		read choice
+			if [[ $choice -eq 1 ]]; then
+				removeInput
+			elif [[ $choice -eq 2 ]]; then
+				readInput
+			else
+				printf "\n\tInvalid string entered. Returning to main menu\n"
+			fi
+	elif [[ $(grep -i $input ../CustomerDetails | wc -l) -eq 0 ]]; then
+		printf "\n\tNo matches were found\n"
+	fi
+}
 
-#Temp file is moved back to the same directory replacing the old file
-mv /tmp/CustomerDetails CustomerDetails
 
+function removeInput
+{
+	#Inverted search - All but the searched item is moved to an temp file
+	#Todo: Currently removes all customers if have same name with no validation
+	#Need to print out how many is found and ask do user want to remove all or redo search and remove 
+	grep -v $input ../CustomerDetails > /tmp/CustomerDetails
+
+	#Temp file is moved back to the same directory replacing the old file
+	mv /tmp/CustomerDetails ../CustomerDetails
+	printf "\n\tCustomer Details successfully removed\n"
+}
+
+readInput
