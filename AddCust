@@ -89,6 +89,4 @@ readPhoneNumber
 
 #Takes the entered parameters and list them in a file called CustomerDetails
 echo "$email		$name		$alias		$address		$phoneNumber" >> ../CustomerDetails
-printf "\n\tCustomer successfully added.\n\tPlease enter to return to main menu"
-read
-clear
+printf "\n\tCustomer successfully added.\n"
