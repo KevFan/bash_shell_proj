@@ -40,7 +40,9 @@ function runMenu
 	        	3) ./FindCust ;;
 	        	4) #Email function
 		esac
-		printf "\nPress any key to continue..."
+		printf "\nPress any key to return to main menu..."
+		read
+		clear
 		mainMenu
 	done
 	printf "\nExiting... bye\n"
