@@ -6,17 +6,54 @@
 #Clear the console
 clear
 
-#Asks user for search term
-printf "Please enter search term: "
+#Function that ask for user for search term and and then call the checkInput option 
+function readInput
+{
+	#Asks user for search term
+	printf "Please enter search term: "
 
-#Takes in serch term as parameter
-read input
+	#Takes in serch term as parameter
+	read input
+	checkInput
+}
 
-#Search term in CustomerDetails 
-grep $input CustomerDetails
+#Function that checks the search term input and displays relevant options
+#If no input is detected, the readInput function is called again for user to re-enter
+#If matches are found, the mathces are displayed, and the actionAfterSearch is called
+#If no matches are found, the actionAfterSearch is called
+function checkInput
+{
+	if [ -z $input ]; then
+		printf "\n\tNo entry detected. Please re-enter search term"
+		readInput
+	elif [[ $(grep -i $input ../CustomerDetails | wc -l) -ne 0 ]]; then
+		printf "\nOne or more matches were found:\n"
+		grep -i $input ../CustomerDetails 
+		actionAfterSearch
+	elif [[ $(grep -i $input ../CustomerDetails | wc -l) -eq 0 ]]; then
+		printf "\nNo matches were found\n"
+		actionAfterSearch
+	fi
+}
 
-#Todo: 
-#- If nothing is found, display relevant message
-#- 
-#Pauses console to display and wait for user interaction
-read
+#Function that displays options for user after the first search
+#Users can perform another search or return to main menu
+#If an invalid option is entered, the script returns the the main menu
+function actionAfterSearch
+{
+	printf "\n\t1) Perform another search\n"
+	printf "\n\t2) Return to Main Menu\n"
+	printf "\nEnter choice: "
+			read choice
+			if [[ $choice -eq 1 ]]; then
+				readInput
+			elif [[ $choice -eq 2 ]]; then
+				printf "\n\tReturning to main menu\n"
+			else
+				printf "Not a valid option"
+			fi
+}
+
+#Calls the readInput function that begins the search loop. This loop is exited to main menu 
+#is exited to main menu if an invalid option is entered or at revelvant options
+readInput

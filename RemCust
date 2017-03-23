@@ -16,18 +16,23 @@ function readInput
 	checkInput
 }
 
+
+#This function checks the search input to see if its valid.
+#If not then the revelent message is displayed.
+#If search input in valid, options are displayed to user.
+#If no matches are found, relevant message is displayed
 function checkInput
 {
 	if [ -z $input ]; then
 		printf "\n\tNo entry detected. Please re-enter search term"
 		readInput
 	elif [[ $(grep -i $input ../CustomerDetails | wc -l) -ne 0 ]]; then
-		printf "\nMultiple matches were found:\n"
+		printf "\nOne or more matches were found:\n"
 		grep -i $input ../CustomerDetails 
 		printf "\n\t1) Remove all matching entries found\n"
 		printf "\n\t2) Perform another search\n"
 		printf "\nEnter choice: "
-		read choice
+			read choice
 			if [[ $choice -eq 1 ]]; then
 				removeInput
 			elif [[ $choice -eq 2 ]]; then
