@@ -11,7 +11,7 @@ clear
 #after to check is whether email is valid
 function readEmail
 {
-	printf "\tPlease enter the customer email address: "
+	printf "Please enter the customer email address: "
 	read email
 	validEmail
 }
@@ -33,27 +33,14 @@ function validEmail
 			validEmail=valid
 		fi
 	done
-	# uniqueEmail
 }
-
-# function uniqueEmail
-# {
-# 	uniqueEmail=$(grep $email ../CustomerDetails | wc -l)
-# 	if [[  $uniqueEmail -ne 0 ]]; then
-# 		printf "\t\nEmail already used\n"
-# 		readEmail
-# 	else
-# 		readName
-# 	fi
-# }
-
 
 
 #This function asks user for phone number. The validPhoneNumber 
 #function is then called to check is phone number is integars only
 function readPhoneNumber
 {
-	printf "\n\tPlease enter the customer telephone Number: "
+	printf "\nPlease enter the customer telephone Number: "
 	read phoneNumber
 	validNumber
 }
@@ -64,7 +51,7 @@ function readPhoneNumber
 function validNumber
 {
 	if ! [[ $phoneNumber =~ ^[0-9]+$ ]]; then
-		printf "\n\tInvalid (String) entry, only positive integers are allowed. Please re-renter option\n"
+		printf "\n\tInvalid character detected, only positive integers are allowed. Please re-renter phone number\n"
 		readPhoneNumber
 	fi
 }
@@ -72,21 +59,32 @@ function validNumber
 #Call readEmail function 
 readEmail
 
-#Asks user for name and take in as parameter - no error checking is done
-printf "\n\tPlease enter the customer name: "
-read name
+#Asks user for name and take in as parameter - no error checking is done 
+#Todo: Need to check for blank entry
+
+while [[ -z $name ]]; do
+	printf "\nPlease enter the customer name: "
+	read name
+done
 
 #Asks user for alias and take in as parameter - no error checking is done
-printf "\n\tPlease enter the customer alias: "
-read alias
+#Todo: Need to check for blank entry
+while [[ -z $alias ]]; do
+	printf "\nPlease enter the customer alias: "
+	read alias
+done
 
 #Asks user for address and take in as parameter - no error checking is done
-printf "\n\tPlease enter the customer address: "
-read address
+#Todo: Need to check for blank entry
+while [[ -z $address ]]; do
+	printf "\nPlease enter the customer address: "
+	read address
+done
 
 #Calls the readPhoneNumber function to ask user for number and take in as parameter 
 readPhoneNumber
 
 #Takes the entered parameters and list them in a file called CustomerDetails
 echo "$email		$name		$alias		$address		$phoneNumber" >> ../CustomerDetails
+sort -o ../CustomerDetails ../CustomerDetails
 printf "\n\tCustomer successfully added.\n"
