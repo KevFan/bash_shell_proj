@@ -38,7 +38,7 @@ function runMenu
 	        	1) ./AddCust ;;
 	        	2) ./RemCust ;;
 	        	3) ./FindCust ;;
-	        	4) #Email function
+	        	4) ./EmailCust ;;
 		esac
 		printf "\nPress any key to return to main menu..."
 		read
@@ -90,7 +90,7 @@ function runMenu
 #If validation passes, runMenu function is called, which in turn executes the relevant script call
 function validInput 
 {
-	if ! [[ $userChoice =~ ^[0-9]+$ ]]; then
+	if ! [[ $userChoice =~ ^-?[0-9]+$ ]]; then
 		printf "\nInvalid (String) entry, only integers shown are allowed. Please re-renter option\n"
 		printf "\nPress enter key to return to Main menu ...."
 		read
