@@ -40,48 +40,13 @@ function runMenu
 	        	3) ./FindCust ;;
 	        	4) ./EmailCust ;;
 		esac
-		printf "\nPress any key to return to main menu..."
+		printf "\n\tPress any key to return to main menu..."
 		read
 		clear
 		mainMenu
 	done
 	printf "\nExiting... bye\n"
 	exit 1
-
-	#################################################################
-	# If/Else version of case statement above
-	#################################################################
-
-	# while [ $userChoice -ne 0 ]
-	# do
-
-	# 	if [ $userChoice -le -1 ] || [ $userChoice -ge 5 ]
-	# 	then
-	# 		printf "\nInvalid number entered\n"
-	# 		read
-	# 		clear
-	# 	if [ $userChoice -eq 1 ]
-	# 	then
-	# 		./AddCust
-	# 	elif [ $userChoice -eq 2 ]
-	# 	then
-	# 		./RemCust
-	# 	elif [ $userChoice -eq 3 ]
-	# 	then 
-	# 		./FindCust
-	# 	elif [ $userChoice -eq 4 ]
-	# 	then
-	# 		printf "This is the to be email function"
-	# 		read
-	# 	else
-	# 		printf "\nInvalid entry (String), only options shown are allowed. Please re-renter option\n"
-	# 		read
-	# 	fi
-	# 	mainMenu
-	# done
-
-	# printf "\nExiting... bye\n"
-	# exit 1
 }
 
 
