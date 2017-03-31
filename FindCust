@@ -26,11 +26,11 @@ function checkInput
 	if [ -z $input ]; then
 		printf "\n\tNo entry detected. Please re-enter search term"
 		readInput
-	elif [[ $(grep -i $input ../CustomerDetails | wc -l) -ne 0 ]]; then
-		printf "\n$(grep -i -c $input ../CustomerDetails) match(s) were found:\n"
-		grep -i $input ../CustomerDetails 
+	elif [[ $(grep -i $input CustomerDetails | wc -l) -ne 0 ]]; then
+		printf "\n$(grep -i -c $input CustomerDetails) match(s) were found:\n"
+		grep -i $input CustomerDetails 
 		actionAfterSearch
-	elif [[ $(grep -i $input ../CustomerDetails | wc -l) -eq 0 ]]; then
+	elif [[ $(grep -i $input CustomerDetails | wc -l) -eq 0 ]]; then
 		printf "\nNo matches were found\n"
 		actionAfterSearch
 	fi
@@ -41,17 +41,23 @@ function checkInput
 #If an invalid option is entered, the script returns the the main menu
 function actionAfterSearch
 {
-	printf "\n\t1) Perform another search\n"
-	printf "\n\t2) Return to Main Menu\n"
-	printf "\nEnter choice: "
-			read choice
-			if [[ $choice -eq 1 ]]; then
+	validChoice=false
+	while [[ $validChoice = false ]]; do
+		printf "\n\t1) Perform another search\n"
+		printf "\n\t=============================\n"
+		printf "\n\t0) Return to Main Menu\n"
+		printf "\nEnter choice: "
+		read choice
+			if ! [[ $choice =~ ^-?[0-9]+$ ]]; then
+				printf "\nInvalid (String) entry, only integers shown are allowed. Please re-renter option\n"
+			elif [ $choice -le -1 ] || [ $choice -ge 3 ]; then
+				printf "\nInvalid number entered\n"
+			elif [[ $choice -eq 1 ]]; then
 				readInput
-			elif [[ $choice -eq 2 ]]; then
-				printf "\n\tReturning to main menu\n"
 			else
-				printf "Not a valid option"
+				validChoice=valid
 			fi
+	done
 }
 
 #Calls the readInput function that begins the search loop. This loop is exited to main menu 
