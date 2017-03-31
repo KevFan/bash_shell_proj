@@ -26,7 +26,7 @@ function validEmail
 		if [[ $email != *@*.* ]]; then
 			printf "\n\tNot a valid email. Must contain @ and a .\n"
 			readEmail
-		elif [[ $(grep -i $email ../CustomerDetails | wc -l) -ne 0 ]]; then
+		elif [[ $(grep -i $email CustomerDetails | wc -l) -ne 0 ]]; then
 			printf "\n\tEmail already used\n"
 			readEmail
 		else
@@ -85,6 +85,6 @@ done
 readPhoneNumber
 
 #Takes the entered parameters and list them in a file called CustomerDetails
-echo "$email		$name		$alias		$address		$phoneNumber" >> ../CustomerDetails
-sort -o ../CustomerDetails ../CustomerDetails
+echo "$email $name $alias $address $phoneNumber" >> CustomerDetails
+sort -o CustomerDetails CustomerDetails
 printf "\n\tCustomer successfully added.\n"
