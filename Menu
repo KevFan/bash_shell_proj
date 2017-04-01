@@ -55,12 +55,14 @@ function runMenu
 #If validation passes, runMenu function is called, which in turn executes the relevant script call
 function validInput 
 {
+	#Checks is userChoice an integar
 	if ! [[ $userChoice =~ ^-?[0-9]+$ ]]; then
 		printf "\nInvalid (String) entry, only integers shown are allowed. Please re-renter option\n"
 		printf "\nPress enter key to return to Main menu ...."
 		read
 		clear
 		mainMenu
+	#Checks if userChoice inputs an integar outside the available options
 	elif [ $userChoice -le -1 ] || [ $userChoice -ge 5 ]; then
 		printf "\nInvalid number entered\n"
 		printf "\nPress enter key to return to Main menu ...."
