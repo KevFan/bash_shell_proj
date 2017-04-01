@@ -1,0 +1,89 @@
+#!/bin/bash
+#Kevin Fan (Date)
+#Description: This script allows the user to search for an existing email 
+# and enter a message subject and message text to send the email 
+
+#clear the terminal
+clear
+
+function emailMenu 
+{
+	printf "\n1) Email all customers"
+	printf "\n2) Search and email one customer\n"
+
+	read choice 
+	case $choice in
+		1) emailAddresses=$(grep -i @ CustomerDetails | awk '{print $1}')
+		   email ;;
+		2) readInput ;;
+	esac
+}
+
+function readInput 
+{
+	#Ask user for search name
+	printf "\nPlease enter name or alias of customer you wish to email:  "
+
+	#Reads in search name as parameter
+	read input
+	checkInput
+}
+
+#Function that checks the search term input and displays relevant options
+#If no input is detected, the readInput function is called again for user to re-enter
+#If matches are found, the mathces are displayed, and the actionAfterSearch is called
+#If no matches are found, the actionAfterSearch is called
+function checkInput
+{
+	if [ -z $input ]; then
+		printf "\n\tNo entry detected. Please re-enter search term"
+		readInput
+	elif [[ $(grep -i $input CustomerDetails | awk '{print $1}' | wc -l) -ne 0 ]]; then
+		printf "\nOne or more matches were found:\n"
+		emailAddresses=$(grep -i $input CustomerDetails | awk '{print $1}')
+		grep -i $input CustomerDetails | awk '{print $1}'
+		actionAfterSearch
+	elif [[ $(grep -i $input CustomerDetails | wc -l) -eq 0 ]]; then
+		printf "\nNo matches were found\n"
+		actionAfterSearch
+	fi
+}
+
+#Function that displays options for user after the first search
+#Users can perform another search or return to main menu
+#If an invalid option is entered, the script returns the the main menu
+function actionAfterSearch
+{
+	printf "\n\t1) Email to these address\n"
+	printf "\n\t2) Perform another search\n"
+	printf "\nEnter choice: "
+			read choice
+			if [[ $choice -eq 1 ]]; then
+				email
+			elif [[ $choice -eq 2 ]]; then
+				readInput
+			else
+				printf "\n\tNot a valid option\n"
+			fi
+}
+
+
+function email
+{
+	printf "\n\tEnter the email message:"
+	read message
+	#Need to check for blank message
+	printf "\n\tEnter the email subject:"
+	read emailSubject
+	#Need to check for blank email subject
+	#printf "Enter message followed by CTRL+D to send\n"
+	echo $message | mail -s $emailSubject $emailAddresses 
+	read
+}
+
+emailMenu
+
+
+# emailaddre=`grep -i john Custdetails | awk ‘{print}’`
+
+#echo $message | mail -s $subject $emailaddress
