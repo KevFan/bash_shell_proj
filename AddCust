@@ -1,5 +1,5 @@
 #!/bin/bash
-#Kevin Fan (Date)
+#Kevin Fan (26/4/17)
 #Description: This script creates a local file named "CustomerDetails".
 #Parameters are taken in from the user and stored/updates the CustomerDetails 
 #file with customer details taken from the user
@@ -60,22 +60,18 @@ function validNumber
 readEmail
 
 #Asks user for name and take in as parameter - no error checking is done 
-#Todo: Need to check for blank entry
-
 while [[ -z $name ]]; do
 	printf "\nPlease enter the customer name: "
 	read name
 done
 
 #Asks user for alias and take in as parameter - no error checking is done
-#Todo: Need to check for blank entry
 while [[ -z $alias ]]; do
 	printf "\nPlease enter the customer alias: "
 	read alias
 done
 
 #Asks user for address and take in as parameter - no error checking is done
-#Todo: Need to check for blank entry
 while [[ -z $address ]]; do
 	printf "\nPlease enter the customer address: "
 	read address
