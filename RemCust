@@ -1,5 +1,5 @@
 #!/bin/bash
-#Kevin Fan (Date)
+#Kevin Fan (26/4/17)
 #Description: This script searches and removes all of a customer's information
 # from the Address Book based on a particular customers name or alias
 
@@ -13,6 +13,7 @@ function readInput
 
 	#Reads in search name as parameter
 	read input
+	lowerCaseInput=${input,,}
 	checkInput
 }
 
@@ -23,33 +24,23 @@ function readInput
 #If no matches are found, relevant message is displayed
 function checkInput
 {
-	if [ -z $input ]; then
+	if [ -z $lowerCaseInput ]; then
 		printf "\n\tNo entry detected. Please re-enter search term"
 		readInput
-	elif [[ $(grep -i $input CustomerDetails | wc -l) -ne 0 ]]; then
-		printf "\n$(grep -i -c $input CustomerDetails) match(s) were found:\n"
-		grep -i $input CustomerDetails 
-		# awk '{ if ($2 == "$input" ) print $0 }' ../CustomerDetails 
+	elif [[ $(awk -v search="$lowerCaseInput" '$2 ~ search || $3 ~ search' CustomerDetails | wc -l) -ne 0 ]]; then
+		printf "\n$(awk -v search="$lowerCaseInput" '$2 ~ search || $3 ~ search' CustomerDetails | wc -l) match(s) were found:\n"
+		awk -v search="$lowerCaseInput" '$2 ~ search || $3 ~ search' CustomerDetails
+		# grep -i $input CustomerDetails 
 		actionAfterSearch
-	elif [[ $(grep -i $input CustomerDetails | wc -l) -eq 0 ]]; then
+	elif [[ $(awk -v search="$lowerCaseInput" '$2 ~ search || $3 ~ search' CustomerDetails | wc -l) -eq 0 ]]; then
 		printf "\nNo matches were found\n"
 		actionAfterSearch
 	fi
 }
 
-#This function removes the searched 
-function removeInput
-{
-	#Inverted search - All but the searched item is moved to an temp file
-	#Todo: Currently removes all customers if have same name with no validation
-	#Need to print out how many is found and ask do user want to remove all or redo search and remove 
-	grep -v $input CustomerDetails > /tmp/CustomerDetails
 
-	#Temp file is moved back to the same directory replacing the old file
-	mv /tmp/CustomerDetails CustomerDetails
-	printf "\nCustomer Details successfully removed\n"
-}
-
+# This function serves as a secondary menu that gives options to the user after the search
+# Users can remove all the matching entries, perfom another seach or return to the main menu
 function actionAfterSearch
 {
 	validChoice=false;
@@ -60,6 +51,7 @@ function actionAfterSearch
 		printf "\n\t0) Return to Main Menu\n"
 		printf "\nEnter choice: "
 		read choice
+		clear
 			if ! [[ $choice =~ ^-?[0-9]+$ ]]; then
 				printf "\nInvalid (String) entry, only integers shown are allowed. Please re-renter option\n"
 			elif [ $choice -le -1 ] || [ $choice -ge 3 ]; then
@@ -74,6 +66,22 @@ function actionAfterSearch
 	done
 }
 
+#This function removes the searched 
+function removeInput
+{
+	# Inverted awk search - moves all names and alias that do not have the search term to another file
+	awk -v search="$lowerCaseInput" '!($2 ~ search) && !($3 ~ search)' CustomerDetails > /tmp/CustomerDetails
+
+	#Inverted search - All but the searched item is moved to an temp file
+	# grep -v $a CustomerDetails > /tmp/CustomerDetails
+
+	#Temp file is moved back to the same directory replacing the old file
+	mv /tmp/CustomerDetails CustomerDetails
+	printf "\nCustomer Details successfully removed\n"
+	sleep 2
+	clear
+}
+
+#Calls the readInput function that begins the script
 readInput
 
-# awk '{ if ($2 == "Kevin" ) print $0 }' ../CustomerDetails 
