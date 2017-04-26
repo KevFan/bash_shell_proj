@@ -1,31 +1,47 @@
 #!/bin/bash
-#Kevin Fan (Date)
+#Kevin Fan (26/24/17)
 #Description: This script allows the user to search for an existing email 
 # and enter a message subject and message text to send the email 
 
 #clear the terminal
 clear
 
+# A function that serves as the first menu that the script calls
+# This function gives options to the user to email all customers or to search and email
+# a customer
 function emailMenu 
-{
-	printf "\n1) Email all customers"
-	printf "\n2) Search and email one customer\n"
+{	
+	validChoice=false
+	while [[ $validChoice = false ]]; do
+		printf "\n\t1) Email all customers"
+		printf "\n\t2) Search and email one customer\n"
+		printf "\n\t==================================\n"
+		printf "\n\t0) Exit to main menu\n"
+		printf "\nEnter a number: "
 
-	read choice 
-	case $choice in
-		1) emailAddresses=$(grep -i @ CustomerDetails | awk '{print $1}')
-		   email ;;
-		2) readInput ;;
-	esac
+		read choice 
+		clear
+		case $choice in
+			1) emailAddresses=$(awk -v search="$@" '$1 ~ search {print $1}' CustomerDetails )
+			   validChoice=valid
+			   email ;;
+			2)	validChoice=valid
+				readInput ;;
+			0)	validChoice=valid ;;
+			*)	printf "\nNot a valid option\n" ;;
+		esac
+	done
 }
 
+# This function reads in an input to search for from the user
 function readInput 
 {
 	#Ask user for search name
-	printf "\nPlease enter name or alias of customer you wish to email:  "
+	printf "\nPlease email of the customer you wish to search for:  "
 
 	#Reads in search name as parameter
 	read input
+	lowerCaseInput=${input,,}
 	checkInput
 }
 
@@ -35,15 +51,15 @@ function readInput
 #If no matches are found, the actionAfterSearch is called
 function checkInput
 {
-	if [ -z $input ]; then
+	if [ -z $lowerCaseInput ]; then
 		printf "\n\tNo entry detected. Please re-enter search term"
 		readInput
-	elif [[ $(grep -i $input CustomerDetails | awk '{print $1}' | wc -l) -ne 0 ]]; then
-		printf "\nOne or more matches were found:\n"
-		emailAddresses=$(grep -i $input CustomerDetails | awk '{print $1}')
-		grep -i $input CustomerDetails | awk '{print $1}'
+	elif [[ $(awk -v search="$lowerCaseInput" '$1 ~ search' CustomerDetails | wc -l) -ne 0 ]]; then
+		printf "\n$(awk -v search="$lowerCaseInput" '$1 ~ search' CustomerDetails | wc -l) matches were found:\n"
+		emailAddresses=$(awk -v search="$lowerCaseInput" '$1 ~ search {print $1}' CustomerDetails )
+		awk -v search="$lowerCaseInput" '$1 ~ search {print $1}' CustomerDetails 
 		actionAfterSearch
-	elif [[ $(grep -i $input CustomerDetails | wc -l) -eq 0 ]]; then
+	elif [[ $(awk -v search="$lowerCaseInput" '$1 ~ search {print $1}' CustomerDetails | wc -l) -eq 0 ]]; then
 		printf "\nNo matches were found\n"
 		actionAfterSearch
 	fi
@@ -54,36 +70,56 @@ function checkInput
 #If an invalid option is entered, the script returns the the main menu
 function actionAfterSearch
 {
-	printf "\n\t1) Email to these address\n"
-	printf "\n\t2) Perform another search\n"
-	printf "\nEnter choice: "
-			read choice
-			if [[ $choice -eq 1 ]]; then
-				email
-			elif [[ $choice -eq 2 ]]; then
-				readInput
-			else
-				printf "\n\tNot a valid option\n"
-			fi
+	validChoice=false;
+	while [[ $validChoice = false ]]; do
+		printf "\n\t1) Email to these address\n"
+		printf "\n\t2) Perform another search\n"
+		printf "\n\t============================\n"
+		printf "\n\t0) Exit to main menu\n"
+		printf "\nEnter choice: "
+		read choice
+		clear
+			case $choice in
+				1)	validChoice=valid
+					email ;;
+				2)	validChoice=valid
+					readInput ;;
+				0)	validChoice=valid ;;
+				*)	printf "\nNot a valid option\n" ;;
+			esac
+	done
 }
 
-
+# Function that constructs the email
 function email
 {
-	printf "\n\tEnter the email message:"
-	read message
-	#Need to check for blank message
-	printf "\n\tEnter the email subject:"
-	read emailSubject
-	#Need to check for blank email subject
-	#printf "Enter message followed by CTRL+D to send\n"
-	echo $message | mail -s $emailSubject $emailAddresses 
-	read
+	# While loop that continually loops until the message is non-blank
+	while [[ -z $message ]]; do
+		printf "\n\tEnter the email message:"
+		read message
+	done
+
+	# While loop that continually loops until the emailSubject is non-blank
+	while [[ -z $emailSubject ]]; do
+		printf "\n\tEnter the email subject:"
+		read emailSubject
+	done
+
+	# Until loop that continually loops until the option entered is Y or N
+	until [[ ${option^^} = 'Y' || ${option^^} = 'N' ]]; do
+		printf "\nSend email (Y/N):"
+		read option
+	done
+
+	# If/Else statement that sends the email or discard the email depending on the user option
+	if [[ ${option^^} = 'Y' ]]; then
+		echo $message | mail -s $emailSubject $emailAddresses 
+		printf "\nEmail sent"
+	elif [[ ${option^^} = 'N' ]]; then
+		printf "\nEmail discarded"
+	fi
 }
 
+# Calls the emailMenu function that begins the loop
 emailMenu
 
-
-# emailaddre=`grep -i john Custdetails | awk ‘{print}’`
-
-#echo $message | mail -s $subject $emailaddress
