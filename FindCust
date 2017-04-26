@@ -1,5 +1,5 @@
 #!/bin/bash
-#Kevin Fan (Date)
+#Kevin Fan (26/4/17)
 #Description: This script allows the user to search for an existing customer based upon
 # any of the customers personal information
 
@@ -10,7 +10,7 @@ clear
 function readInput
 {
 	#Asks user for search term
-	printf "Please enter search term: "
+	printf "Please enter any of the customer information to search for: "
 
 	#Takes in serch term as parameter
 	read input
@@ -26,11 +26,11 @@ function checkInput
 	if [ -z $input ]; then
 		printf "\n\tNo entry detected. Please re-enter search term"
 		readInput
-	elif [[ $(grep -i $input CustomerDetails | wc -l) -ne 0 ]]; then
+	elif [[ $(grep -i -c $input CustomerDetails) -ne 0 ]]; then
 		printf "\n$(grep -i -c $input CustomerDetails) match(s) were found:\n"
 		grep -i $input CustomerDetails 
 		actionAfterSearch
-	elif [[ $(grep -i $input CustomerDetails | wc -l) -eq 0 ]]; then
+	elif [[ $(grep -i -c $input CustomerDetails) -eq 0 ]]; then
 		printf "\nNo matches were found\n"
 		actionAfterSearch
 	fi
@@ -48,6 +48,7 @@ function actionAfterSearch
 		printf "\n\t0) Return to Main Menu\n"
 		printf "\nEnter choice: "
 		read choice
+		clear
 			if ! [[ $choice =~ ^-?[0-9]+$ ]]; then
 				printf "\nInvalid (String) entry, only integers shown are allowed. Please re-renter option\n"
 			elif [ $choice -le -1 ] || [ $choice -ge 3 ]; then
@@ -61,5 +62,5 @@ function actionAfterSearch
 }
 
 #Calls the readInput function that begins the search loop. This loop is exited to main menu 
-#is exited to main menu if an invalid option is entered or at revelvant options
+#only at revelvant options
 readInput
