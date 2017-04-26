@@ -1,5 +1,5 @@
 #!/bin/bash
-#Kevin Fan (Date)
+#Kevin Fan (26/4/17)
 #Description: This Menu script present the user with a command line
 #menu and allow the user to select the functionaly based on
 # their selection which in turns executes the relevent script
@@ -26,12 +26,10 @@ function mainMenu
 
 
 #From user choice, execute relevant script for function
-#Need to do error handling for options
-#Probably use while loop and if statement to stay in menu till a valid
-#option is entered 
 
 function runMenu
 {
+	#While loop to stay in script until user enters 0 to exit script
 	while [ $userChoice -ne 0 ]
 	do
 		case $userChoice in
@@ -40,8 +38,8 @@ function runMenu
 	        	3) ./FindCust ;;
 	        	4) ./EmailCust ;;
 		esac
-		printf "\n\tPress any key to return to main menu..."
-		read
+		printf "\n\tReturning to main menu..."
+		sleep 1
 		clear
 		mainMenu
 	done
@@ -55,18 +53,18 @@ function runMenu
 #If validation passes, runMenu function is called, which in turn executes the relevant script call
 function validInput 
 {
-	#Checks is userChoice an integar
+	#Checks is userChoice not an integar but a string
 	if ! [[ $userChoice =~ ^-?[0-9]+$ ]]; then
 		printf "\nInvalid (String) entry, only integers shown are allowed. Please re-renter option\n"
-		printf "\nPress enter key to return to Main menu ...."
-		read
+		printf "\nReturning to Main menu ...."
+		sleep 1
 		clear
 		mainMenu
 	#Checks if userChoice inputs an integar outside the available options
 	elif [ $userChoice -le -1 ] || [ $userChoice -ge 5 ]; then
 		printf "\nInvalid number entered\n"
-		printf "\nPress enter key to return to Main menu ...."
-		read
+		printf "\nReturning to Main menu ...."
+		sleep 1
 		clear
 		mainMenu
 	else
