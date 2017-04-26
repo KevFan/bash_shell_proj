@@ -1,12 +1,12 @@
 #!/bin/bash
-#Kevin Fan (26/4/17)
-#Description: This script allows the user to search for an existing customer based upon
+# Kevin Fan (26/4/17)
+# Description: This script allows the user to search for an existing customer based upon
 # any of the customers personal information
 
-#Clear the console
+# Clear the console
 clear
 
-#Function that ask for user for search term and and then call the checkInput option 
+# Function that ask for user for search term and and then call the checkInput option 
 function readInput
 {
 	#Asks user for search term
@@ -17,63 +17,51 @@ function readInput
 	checkInput
 }
 
-#Function that checks the search term input and displays relevant options
-#If no input is detected, the readInput function is called again for user to re-enter
-#If matches are found, the mathces are displayed, and the actionAfterSearch is called
-#If no matches are found, the actionAfterSearch is called
+# Function that checks the search term input and displays relevant options
 function checkInput
 {
+	# If no input is detected, the readInput function is called again for user to re-enter
 	if [ -z $input ]; then
 		clear
 		printf "\n\tNo entry detected. Please re-enter search term\n"
 		readInput
+	# If matches are found, the mathces are displayed, and the actionAfterSearch is called
 	elif [[ $(grep -i -c $input CustomerDetails) -ne 0 ]]; then
 		printf "\n$(grep -i -c $input CustomerDetails) match(s) were found:\n"
 		grep -i $input CustomerDetails 
 		actionAfterSearch
+	# If no matches are found, the actionAfterSearch is called
 	elif [[ $(grep -i -c $input CustomerDetails) -eq 0 ]]; then
 		printf "\nNo matches were found\n"
 		actionAfterSearch
 	fi
 }
 
-#Function that displays options for user after the first search
-#Users can perform another search or return to main menu
-#If an invalid option is entered, the script returns the the main menu
+# Function that displays options for user after the first search
+# Users can perform another search or return to main menu
 function actionAfterSearch
 {
+	# Local variable to control while loop
 	validChoice=false
 	while [[ $validChoice = false ]]; do
-		# printf "\n\t1) Perform another search\n"
-		# printf "\n\t=============================\n"
-		# printf "\n\t0) Return to Main Menu\n"
-		# printf "\nEnter choice: "
-		# read choice
-		# clear
-		# 	if ! [[ $choice =~ ^-?[0-9]+$ ]]; then
-		# 		printf "\nInvalid (String) entry, only integers shown are allowed. Please re-renter option\n"
-		# 	elif [ $choice -le -1 ] || [ $choice -ge 3 ]; then
-		# 		printf "\nInvalid number entered\n"
-		# 	elif [[ $choice -eq 1 ]]; then
-		# 		readInput
-		# 	else
-		# 		validChoice=valid
-		# 	fi
-		# esac
 		printf "\nPerform another search (Y/N):"
 		read choice
 		clear
+		# User choice to converted to upper case, and if its Y then set the validChoice varible to valid to exit loop and call the readInput function
+		# to search again
 		if [[ ${choice^^} = 'Y' ]]; then
 			validChoice=valid
 			readInput
+		# User choice to converted to upper case, and if its Y then set the validChoice varible to valid to exit loop and return to menu script
 		elif [[ ${choice^^} = 'N' ]]; then
 			validChoice=valid
 		else
+		# All other cases print out invalid option
 			printf "\nNot a valid option"
 		fi
 	done
 }
 
-#Calls the readInput function that begins the search loop. This loop is exited to main menu 
-#only at revelvant options
+# Calls the readInput function that begins the search loop. This loop is exited to main menu 
+# only at revelvant options
 readInput
