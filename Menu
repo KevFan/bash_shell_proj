@@ -1,14 +1,14 @@
 #!/bin/bash
-#Kevin Fan (26/4/17)
-#Description: This Menu script present the user with a command line
-#menu and allow the user to select the functionaly based on
+# Kevin Fan (26/4/17)
+# Description: This Menu script present the user with a command line
+# menu and allow the user to select the functionaly based on
 # their selection which in turns executes the relevent script
 
-#Clear the console
+# Clear the console
 clear
 
-#Function that displays available options to user, reads in user option and calls validation
-#function to check is user input valid
+# Function that displays available options to user, reads in user option and calls validation
+# function to check is user input valid
 function mainMenu 
 {
 	printf "\nWelcome. Please choose one of the following:\n"
@@ -24,20 +24,48 @@ function mainMenu
 	validInput
 }
 
+# This function performs validation on userChoice from mainMenu function.
+# If validation fails, a relevent error is displayed and returns to mainMenu to re-enter user Choice
+# If validation passes, runMenu function is called, which in turn executes the relevant script call
+function validInput 
+{
+	# If the userChoice is not an integar but a string, error message is displayed for 1 second and returns to main menu
+	if ! [[ $userChoice =~ ^-?[0-9]+$ ]]; then
+		printf "\nInvalid (String) entry, only integers shown are allowed. Please re-renter option\n"
+		printf "\nReturning to Main menu ...."
+		sleep 1
+		clear
+		mainMenu
+	# Checks if userChoice inputs an integar outside the available options, error message is displayed for 1 second and returns to main menu
+	elif [ $userChoice -le -1 ] || [ $userChoice -ge 5 ]; then
+		printf "\nInvalid number entered\n"
+		printf "\nReturning to Main menu ...."
+		sleep 1
+		clear
+		mainMenu
 
-#From user choice, execute relevant script for function
+	else
+		runMenu
+	fi
+}
+
+
+# From user choice, execute relevant script for function. Function is a while loop until 0 in 
+# the main menu
 
 function runMenu
 {
-	#While loop to stay in script until user enters 0 to exit script
+	# While loop to stay in script until user enters 0 from the main menu function to exit script
 	while [ $userChoice -ne 0 ]
 	do
+		# Case statement that executes relevant scripts depending on userChoice from main menu
 		case $userChoice in
 	        	1) ./AddCust ;;
 	        	2) ./RemCust ;;
 	        	3) ./FindCust ;;
 	        	4) ./EmailCust ;;
 		esac
+		# After returning from the relevant script, display message for 1 second, clear the console and return to main menu
 		printf "\n\tReturning to main menu..."
 		sleep 1
 		clear
@@ -45,31 +73,6 @@ function runMenu
 	done
 	printf "\nExiting... bye\n"
 	exit 1
-}
-
-
-#This function performs validation on userChoice from mainMenu function.
-#If validation fails, a relevent error is displayed and returns to mainMenu to re-enter user Choice
-#If validation passes, runMenu function is called, which in turn executes the relevant script call
-function validInput 
-{
-	#Checks is userChoice not an integar but a string
-	if ! [[ $userChoice =~ ^-?[0-9]+$ ]]; then
-		printf "\nInvalid (String) entry, only integers shown are allowed. Please re-renter option\n"
-		printf "\nReturning to Main menu ...."
-		sleep 1
-		clear
-		mainMenu
-	#Checks if userChoice inputs an integar outside the available options
-	elif [ $userChoice -le -1 ] || [ $userChoice -ge 5 ]; then
-		printf "\nInvalid number entered\n"
-		printf "\nReturning to Main menu ...."
-		sleep 1
-		clear
-		mainMenu
-	else
-		runMenu
-	fi
 }
 
 #Run main Menu function, which begins the loop 

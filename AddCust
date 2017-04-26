@@ -1,14 +1,19 @@
 #!/bin/bash
-#Kevin Fan (26/4/17)
-#Description: This script creates a local file named "CustomerDetails".
-#Parameters are taken in from the user and stored/updates the CustomerDetails 
-#file with customer details taken from the user
+# Kevin Fan (26/4/17)
+# Description: This script creates a local file named "CustomerDetails".
+# Parameters are taken in from the user and stored/updates the CustomerDetails 
+# file with customer details taken from the user
 
-#Clears the screen content
+# Clears the screen content
 clear
 
-#This function asks user for customer email. The valid email function is called
-#after to check is whether email is valid
+# If CustomerDetails file does not exist, create it
+if [ ! -f CustomerDetails ]; then
+    touch CustomerDetails
+fi
+
+# This function asks user for customer email. The valid email function is called
+# after to check is whether email is valid
 function readEmail
 {
 	printf "Please enter the customer email address: "
@@ -16,28 +21,32 @@ function readEmail
 	validEmail
 }
 
-#This function validates whether email entered is valid or not.
-#If email is not valid the readEmail function is called again to ask user to 
-#re-enter email address
+# This function validates whether email entered is valid or not.
+# If email is not valid the readEmail function is called again to ask user to 
+# re-enter email address
 function validEmail
 {
+	# Local variable to control while loop
 	validEmail=false
 	while [[ $validEmail = false ]]; do
+		# Prints out error message if the email it not in the format *@*.*
 		if [[ $email != *@*.* ]]; then
-			printf "\n\tNot a valid email. Must contain @ and a .\n"
+			printf "\n\tNot a valid email. Must be in the format *@*.*\n"
 			readEmail
+		# Prints out error message if the email if already contained in the CustomerDetails file
 		elif [[ $(grep -i -c $email CustomerDetails) -ne 0 ]]; then
 			printf "\n\tEmail already used\n"
 			readEmail
 		else
+		# In all other cases, email is valid and exits the loop
 			validEmail=valid
 		fi
 	done
 }
 
 
-#This function asks user for phone number. The validPhoneNumber 
-#function is then called to check is phone number is integars only
+# This function asks user for phone number. The validPhoneNumber 
+# function is then called to check is phone number is integars only
 function readPhoneNumber
 {
 	printf "\nPlease enter the customer telephone Number: "
@@ -45,9 +54,9 @@ function readPhoneNumber
 	validNumber
 }
 
-#This function checks does phone number contain positive integars only.
-#If not, the readPhoneNumber function to called again to ask user to re-enter
-#phone number 
+# This function checks does phone number contain positive integars only.
+# If not, the readPhoneNumber function to called again to ask user to re-enter
+# phone number 
 function validNumber
 {
 	if ! [[ $phoneNumber =~ ^[0-9]+$ ]]; then
@@ -56,38 +65,33 @@ function validNumber
 	fi
 }
 
-# If CustomerDetails file does not exist, create it
-if [ ! -f CustomerDetails ]; then
-    touch CustomerDetails
-fi
-
-#Call readEmail function 
+# Call readEmail function 
 readEmail
 
-#Asks user for name and take in as parameter - no error checking is done 
+# Asks user for name and take in as parameter - no error checking is done 
 while [[ -z $name ]]; do
 	printf "\nPlease enter the customer name: "
 	read name
 done
 
-#Asks user for alias and take in as parameter - no error checking is done
+# Asks user for alias and take in as parameter - no error checking is done
 while [[ -z $alias ]]; do
 	printf "\nPlease enter the customer alias: "
 	read alias
 done
 
-#Asks user for address and take in as parameter - no error checking is done
+# Asks user for address and take in as parameter - no error checking is done
 while [[ -z $address ]]; do
 	printf "\nPlease enter the customer address: "
 	read address
 done
 
-#Calls the readPhoneNumber function to ask user for number and take in as parameter 
+# Calls the readPhoneNumber function to ask user for number and take in as parameter 
 readPhoneNumber
 
-#Takes the entered parameters, converts them to lowercase and list them in a file called CustomerDetails
+# Takes the entered parameters, converts them to lowercase and pass them in a file called CustomerDetails
 echo "${email,,}	${name,,}	${alias,,}	${address,,}	$phoneNumber" >> CustomerDetails
 
-# Sort the customer details
+# Sort the customer details in alphabetical order according to their email address
 sort -o CustomerDetails CustomerDetails
 printf "\n\tCustomer successfully added.\n"
