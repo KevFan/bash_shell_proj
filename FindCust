@@ -10,7 +10,7 @@ clear
 function readInput
 {
 	#Asks user for search term
-	printf "Please enter any of the customer information to search for: "
+	printf "\nPlease enter any of the customer information to search for: "
 
 	#Takes in serch term as parameter
 	read input
@@ -24,7 +24,8 @@ function readInput
 function checkInput
 {
 	if [ -z $input ]; then
-		printf "\n\tNo entry detected. Please re-enter search term"
+		clear
+		printf "\n\tNo entry detected. Please re-enter search term\n"
 		readInput
 	elif [[ $(grep -i -c $input CustomerDetails) -ne 0 ]]; then
 		printf "\n$(grep -i -c $input CustomerDetails) match(s) were found:\n"
@@ -43,21 +44,33 @@ function actionAfterSearch
 {
 	validChoice=false
 	while [[ $validChoice = false ]]; do
-		printf "\n\t1) Perform another search\n"
-		printf "\n\t=============================\n"
-		printf "\n\t0) Return to Main Menu\n"
-		printf "\nEnter choice: "
+		# printf "\n\t1) Perform another search\n"
+		# printf "\n\t=============================\n"
+		# printf "\n\t0) Return to Main Menu\n"
+		# printf "\nEnter choice: "
+		# read choice
+		# clear
+		# 	if ! [[ $choice =~ ^-?[0-9]+$ ]]; then
+		# 		printf "\nInvalid (String) entry, only integers shown are allowed. Please re-renter option\n"
+		# 	elif [ $choice -le -1 ] || [ $choice -ge 3 ]; then
+		# 		printf "\nInvalid number entered\n"
+		# 	elif [[ $choice -eq 1 ]]; then
+		# 		readInput
+		# 	else
+		# 		validChoice=valid
+		# 	fi
+		# esac
+		printf "\nPerform another search (Y/N):"
 		read choice
 		clear
-			if ! [[ $choice =~ ^-?[0-9]+$ ]]; then
-				printf "\nInvalid (String) entry, only integers shown are allowed. Please re-renter option\n"
-			elif [ $choice -le -1 ] || [ $choice -ge 3 ]; then
-				printf "\nInvalid number entered\n"
-			elif [[ $choice -eq 1 ]]; then
-				readInput
-			else
-				validChoice=valid
-			fi
+		if [[ ${choice^^} = 'Y' ]]; then
+			validChoice=valid
+			readInput
+		elif [[ ${choice^^} = 'N' ]]; then
+			validChoice=valid
+		else
+			printf "\nNot a valid option"
+		fi
 	done
 }
 
