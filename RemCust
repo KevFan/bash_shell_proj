@@ -1,38 +1,47 @@
 #!/bin/bash
-#Kevin Fan (26/4/17)
-#Description: This script searches and removes all of a customer's information
+# Kevin Fan (26/4/17)
+# Description: This script searches and removes all of a customer's information
 # from the Address Book based on a particular customers name or alias
 
-#Clear the terminal
+# Clear the terminal
 clear
 
+# This function reads in the search input from the user
 function readInput 
 {
-	#Ask user for search name
+	# Ask user for search name
 	printf "\nPlease enter name or alias of customer you wish to remove:  "
 
-	#Reads in search name as parameter
+	# Reads in search name as parameter
 	read input
+
+	# Converts the entered input from user to all lowercase to perform a case insensitive search 
+	# (all customers added by the AddCust script are converted to all lower case on addition to file)
 	lowerCaseInput=${input,,}
+
+	# Performs an awk search on the lowerCaseInput on the name and alias. Count the number of lines and assign to variable
+	searchCount=$(awk -v search="$lowerCaseInput" '$2 ~ search || $3 ~ search' CustomerDetails | wc -l)
+
+	# Calls the checkInput function to check is the input a valid one
 	checkInput
 }
 
 
-#This function checks the search input to see if its valid.
-#If not then the revelent message is displayed.
-#If search input in valid, options are displayed to user.
-#If no matches are found, relevant message is displayed
+# This function checks the search input to see if its valid.
 function checkInput
 {
+	# If search input is blank, error message is displayed and calls the readInput function to ask user to re-enter search name/alias
 	if [ -z $lowerCaseInput ]; then
 		printf "\n\tNo entry detected. Please re-enter search term"
 		readInput
-	elif [[ $(awk -v search="$lowerCaseInput" '$2 ~ search || $3 ~ search' CustomerDetails | wc -l) -ne 0 ]]; then
-		printf "\n$(awk -v search="$lowerCaseInput" '$2 ~ search || $3 ~ search' CustomerDetails | wc -l) match(s) were found:\n"
+	# If search count of input is not 0, display the number of matches found and call the actionAfterSearch function
+	elif [[ $searchCount -ne 0 ]]; then
+		printf "\n$searchCount match(s) were found:\n"
+		# Awk functions that search on the lowerCaseInput on the name and alias and displays the matching lines
 		awk -v search="$lowerCaseInput" '$2 ~ search || $3 ~ search' CustomerDetails
-		# grep -i $input CustomerDetails 
 		actionAfterSearch
-	elif [[ $(awk -v search="$lowerCaseInput" '$2 ~ search || $3 ~ search' CustomerDetails | wc -l) -eq 0 ]]; then
+	# If search count of input is 0, display message and call the actionAfterSearch function
+	elif [[ $searchCount -eq 0 ]]; then
 		printf "\nNo matches were found\n"
 		actionAfterSearch
 	fi
@@ -43,6 +52,7 @@ function checkInput
 # Users can remove all the matching entries, perfom another seach or return to the main menu
 function actionAfterSearch
 {
+	# Local variable to control while loop
 	validChoice=false;
 	while [[ $validChoice = false ]]; do
 		printf "\n\t1) Remove all matching entries found\n"
@@ -52,36 +62,55 @@ function actionAfterSearch
 		printf "\nEnter choice: "
 		read choice
 		clear
+			# If entered choice is not a number, display error message and loop back
 			if ! [[ $choice =~ ^-?[0-9]+$ ]]; then
 				printf "\nInvalid (String) entry, only integers shown are allowed. Please re-renter option\n"
+			# If entered choice is a number greater than or less than the options available, display error message and loop back
 			elif [ $choice -le -1 ] || [ $choice -ge 3 ]; then
 				printf "\nInvalid number entered\n"
+			# If entered choice is 1, set the validChoice variable to valid and call the removeInput function
 			elif [[ $choice -eq 1 ]]; then
+				validChoice=valid
 				removeInput
+			# If the eneted choice is 2, set the validChoice variable to valid and call the readInput function to search again
 			elif [[ $choice -eq 2 ]]; then
+				validChoice=valid
 				readInput
+			# In all other cases, set the validChoice variable to value, and the script will end and return back to menu script
 			else
 				validChoice=valid
 			fi
 	done
 }
 
-#This function removes the searched 
+#This function removes the searched customer(s), an additional confirmation is asked from the user to delete the Customers or not
 function removeInput
 {
-	# Inverted awk search - moves all names and alias that do not have the search term to another file
-	awk -v search="$lowerCaseInput" '!($2 ~ search) && !($3 ~ search)' CustomerDetails > /tmp/CustomerDetails
+	# Until loop that read user choice until the upperCase of choice variable is either Y or N
+	until [[ ${choice^^} = 'Y' || ${choice^^} = 'N' ]]; do
+		printf "\nRemove customers (Y/N):"
+		read choice
+	done
 
-	#Inverted search - All but the searched item is moved to an temp file
-	# grep -v $a CustomerDetails > /tmp/CustomerDetails
+	# User choice to converted to upper case, and if its Y then remove the searched Customer(s) and set the validChoice varible 
+	# to valid to exit loop and return to menu script
+	if [[ ${choice^^} = 'Y' ]]; then
+		# Inverted awk search - moves all Customers whos names and alias that do not have the search term to another tempoary file
+		awk -v search="$lowerCaseInput" '!($2 ~ search) && !($3 ~ search)' CustomerDetails > /tmp/CustomerDetails
 
-	#Temp file is moved back to the same directory replacing the old file
-	mv /tmp/CustomerDetails CustomerDetails
-	printf "\nCustomer Details successfully removed\n"
-	sleep 2
-	clear
+		#Temp file is moved back to the same directory replacing the old file
+		mv /tmp/CustomerDetails CustomerDetails
+		printf "\nCustomer Details successfully removed\n"
+		sleep 1
+		validChoice=valid
+	# User choice to converted to upper case, and if its N, then set the validChoice varible to valid to exit loop and return to menu script
+	elif [[ ${choice^^} = 'N' ]]; then
+		printf "\nNo customer(s) removed"
+		validChoice=valid
+		sleep 1
+	fi
 }
 
-#Calls the readInput function that begins the script
+# Calls the readInput function that begins the script
 readInput
 
