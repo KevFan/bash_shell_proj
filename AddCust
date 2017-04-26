@@ -82,5 +82,7 @@ readPhoneNumber
 
 #Takes the entered parameters and list them in a file called CustomerDetails
 echo "$email	$name	$alias	$address	$phoneNumber" >> CustomerDetails
+
+# Sort the customer details
 sort -o CustomerDetails CustomerDetails
 printf "\n\tCustomer successfully added.\n"
