@@ -92,8 +92,7 @@ function removeInput
 		read choice
 	done
 
-	# User choice to converted to upper case, and if its Y then remove the searched Customer(s) and set the validChoice varible 
-	# to valid to exit loop and return to menu script
+	# User choice to converted to upper case, and if its Y then remove the searched Customer(s) and return to menu script
 	if [[ ${choice^^} = 'Y' ]]; then
 		# Inverted awk search - moves all Customers whos names and alias that do not have the search term to another tempoary file
 		awk -v search="$lowerCaseInput" '!($2 ~ search) && !($3 ~ search)' CustomerDetails > /tmp/CustomerDetails
@@ -102,11 +101,9 @@ function removeInput
 		mv /tmp/CustomerDetails CustomerDetails
 		printf "\nCustomer Details successfully removed\n"
 		sleep 1
-		validChoice=valid
-	# User choice to converted to upper case, and if its N, then set the validChoice varible to valid to exit loop and return to menu script
+	# User choice to converted to upper case, and if its N and return to menu script
 	elif [[ ${choice^^} = 'N' ]]; then
 		printf "\nNo customer(s) removed"
-		validChoice=valid
 		sleep 1
 	fi
 }
