@@ -114,19 +114,19 @@ function email
 {
 	# While loop that continually loops until the message is non-blank
 	while [[ -z $message ]]; do
-		printf "\n\tEnter the email message:"
+		printf "\n\tEnter the email message: "
 		read message
 	done
 
 	# While loop that continually loops until the emailSubject is non-blank
 	while [[ -z $emailSubject ]]; do
-		printf "\n\tEnter the email subject:"
+		printf "\n\tEnter the email subject: "
 		read emailSubject
 	done
 
 	# Until loop that continually loops until the option entered is Y or N
 	until [[ ${option^^} = 'Y' || ${option^^} = 'N' ]]; do
-		printf "\nSend email (Y/N):"
+		printf "\nSend email (Y/N): "
 		read option
 	done
 
