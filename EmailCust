@@ -14,7 +14,7 @@ function emailMenu
 	validChoice=false
 	while [[ $validChoice = false ]]; do
 		printf "\n\t1) Email all customers"
-		printf "\n\t2) Search and email one customer\n"
+		printf "\n\t2) Search customer by email\n"
 		printf "\n\t==================================\n"
 		printf "\n\t0) Exit to main menu\n"
 		printf "\nEnter a number: "

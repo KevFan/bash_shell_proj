@@ -68,19 +68,19 @@ function validNumber
 # Call readEmail function 
 readEmail
 
-# Asks user for name and take in as parameter - no error checking is done 
+# Asks user for name and take in as parameter, loops until name in not blank
 while [[ -z $name ]]; do
 	printf "\nPlease enter the customer name: "
 	read name
 done
 
-# Asks user for alias and take in as parameter - no error checking is done
+# Asks user for alias and take in as parameter, loops until name in not blank
 while [[ -z $alias ]]; do
 	printf "\nPlease enter the customer alias: "
 	read alias
 done
 
-# Asks user for address and take in as parameter - no error checking is done
+# Asks user for address and take in as parameter, loops until name in not blank
 while [[ -z $address ]]; do
 	printf "\nPlease enter the customer address: "
 	read address
