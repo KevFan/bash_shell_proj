@@ -32,7 +32,7 @@ USER INSTRUCTIONS:
 ----------------------------------
 The project has only been tested in the ubuntu terminal. After running the ./Menu script, you will be brought to the following menu :
 
-
+`
 Welcome. Please choose one of the following:
 
 	1. Add a new Customer
@@ -41,7 +41,7 @@ Welcome. Please choose one of the following:
 	4. E-mail a Customer
 
 Enter a Number:
-
+`
 
 From this menu, the user and enter the number of the relevant option to execute the subsequent shell scripts/functions. 
 
