@@ -28,7 +28,7 @@ USER INSTRUCTIONS:
 ----------------------------------
 The project has only been tested in the ubuntu terminal. After running the ./Menu script, you will be brought to the following menu :
 
-{
+
 Welcome. Please choose one of the following:
 
 	1. Add a new Customer
@@ -37,11 +37,11 @@ Welcome. Please choose one of the following:
 	4. E-mail a Customer
 
 Enter a Number:
-}
+
 
 From this menu, the user and enter the number of the relevant option to execute the subsequent shell scripts/functions. 
 
-Points to not:
+Points to note:
 * All entered customer details are converted to call lowercase when added to file to allow easier case insensitive search 
 * The search for removing a customer is based only matching results of their name or alias. Other fields are not searched (intentional design choice)
 * The search for a customer searches any of the fields and return any matches 
